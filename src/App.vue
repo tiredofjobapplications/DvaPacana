@@ -1,47 +1,59 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { ref } from 'vue';
+
+import UserItems from './components/UserItems.vue';
+import SelectedItem from './components/SelectedItem.vue';
+import ItemsPicker from './components/ItemsPicker.vue';
+
+import { useData } from './composables/useData';
+
+const [ itemsAvailable, itemsUser ] = useData();
+
+const selectedUser = ref([]);
+const selectedAvailable = ref({});
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+  <main class="app">
+    <div class="app__row">
+      <UserItems
+        :selected="selectedUser"
+        :count="itemsUser.length"
+      ></UserItems>
+      <SelectedItem
+        :selected="selectedAvailable"
+      ></SelectedItem>
     </div>
-  </header>
-
-  <main>
-    <TheWelcome />
+    <div class="app__row">
+      <ItemsPicker
+        mode="multiple"
+        :items="itemsUser"
+        v-model="selectedUser"
+      ></ItemsPicker>
+      <ItemsPicker
+        mode="single"
+        :items="itemsAvailable"
+        v-model="selectedAvailable"
+      ></ItemsPicker>
+    </div>
   </main>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
+.app {
+  max-width: 600px;
+  width: calc(100% - 40px);
+  margin: auto;
+  padding-top: 20px;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+.app__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.app__row + .app__row {
+  padding-top: 16px;
 }
 </style>
